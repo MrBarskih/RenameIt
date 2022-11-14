@@ -5,15 +5,21 @@ using UnityEngine;
 
 public class ConsoleResizeOnWidowsChange : MonoBehaviour, IResizable
 {
-    private TextMeshPro text;
+    private TextMeshProUGUI text;
+
+    [SerializeField]
+    [Range(0f, 2f)]
+    private float fontSizePercents;
 
     private void Start()
     {
-        text = this.GetComponent<TextMeshPro>();
+        text = gameObject.GetComponent<TextMeshProUGUI>();
+
+        text.fontSize = Screen.width / 100 * fontSizePercents;
     }
 
     public void ResizeIfWindowsWasChanged()
     {
-        text.fontSize = 10;
+        text.fontSize = Screen.width / 100 * fontSizePercents;
     }
 }

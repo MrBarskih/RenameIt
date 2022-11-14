@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResolutionWatcher : MonoBehaviour
@@ -9,10 +11,14 @@ public class ResolutionWatcher : MonoBehaviour
     [Range(0.5f, 5f)]
     public float sec_in_check_window;
 
+    private IEnumerable<IResizable> resObjs;
+
     void Start()
     {
         savedScreenWidth = Screen.width;
         savedScreenHeight = Screen.height;
+
+        resObjs = FindObjectsOfType<MonoBehaviour>().OfType<IResizable>();
 
         StartCoroutine(CheckIfScreenSizeWasChanged());
     }
@@ -31,7 +37,9 @@ public class ResolutionWatcher : MonoBehaviour
             {
                 savedScreenHeight = Screen.height;
                 savedScreenWidth = Screen.width;
- 
+
+                foreach (IResizable resObj in resObjs)
+                    resObj.ResizeIfWindowsWasChanged();
             }
         }
     }
