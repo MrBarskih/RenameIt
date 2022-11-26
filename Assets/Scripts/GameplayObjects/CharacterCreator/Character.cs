@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character
 {
+    private string nickName;
     private int hp;
     private int minDamage;
     private int maxDamage;
 
-    public Character()
+    public Character(string name)
     {
+        this.nickName = name;
         this.hp = 80;
         this.minDamage = 1;
         this.maxDamage = 2;

@@ -19,8 +19,8 @@ public class BattleSystem : MonoBehaviour
 
     void Start()
     {
-        leftCornerCharacter = new Character();
-        rightCornerCharacter = new Character();
+        leftCornerCharacter = new Character("");
+        rightCornerCharacter = new Character("");
         gameConsole = FindObjectOfType<ConsoleTextLogger>();
         StartCoroutine(BattleProcess());
     }
