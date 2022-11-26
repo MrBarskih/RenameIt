@@ -39,7 +39,7 @@ public class BattleSystem : MonoBehaviour
             }
             else
             {
-                int attack;
+                //int attack;
                 if (playerTurn)
                 {
                     
