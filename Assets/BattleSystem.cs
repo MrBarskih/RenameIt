@@ -13,12 +13,16 @@ public class BattleSystem : MonoBehaviour
 
     Character leftCornerCharacter;
     Character rightCornerCharacter;
+    ConsoleTextLogger gameConsole;
+
+    private bool playerTurn = true;
 
     void Start()
     {
-        StartCoroutine(BattleProcess());
         leftCornerCharacter = new Character();
         rightCornerCharacter = new Character();
+        gameConsole = FindObjectOfType<ConsoleTextLogger>();
+        StartCoroutine(BattleProcess());
     }
 
     private IEnumerator BattleProcess() 
@@ -27,8 +31,19 @@ public class BattleSystem : MonoBehaviour
         {
             yield return new WaitForSeconds(sec_between_turns);
             if (leftCornerCharacter == null || rightCornerCharacter == null)
-            { 
-                //class for console text outpus
+            {
+                if (leftCornerCharacter == null)
+                    gameConsole.AddText("There is no leftCharacter", WrapTags.Neutral);
+                if (rightCornerCharacter == null)
+                    gameConsole.AddText("There is no rigthChrarcter", WrapTags.Neutral);
+            }
+            else
+            {
+                int attack;
+                if (playerTurn)
+                {
+                    
+                }
             }
         }
 
