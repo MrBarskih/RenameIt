@@ -19,7 +19,7 @@ public class Character
 
     public int MakeAnAttack()
     {
-        return Random.Range(minDamage, maxDamage);
+        return Random.Range(minDamage, maxDamage + 1);
     }
 
     public int GetAHit(int damage)

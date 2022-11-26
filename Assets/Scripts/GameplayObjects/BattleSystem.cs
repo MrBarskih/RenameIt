@@ -64,7 +64,7 @@ public class BattleSystem : MonoBehaviour
 
                     characterThatTurns[!playerTurn].GetAHit(attack);
                     lineText = characterThatTurns[!playerTurn].nickName + " now has " + characterThatTurns[!playerTurn].hp + " hp";
-                    gameConsole.AddText(lineText, characterTag[!playerTurn]);
+                    gameConsole.AddText(lineText, characterTag[playerTurn]);
                     gameConsole.NextLine();
 
                     if (characterThatTurns[!playerTurn].hp <= 0)

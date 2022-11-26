@@ -33,9 +33,9 @@ public class CharacterCreator : MonoBehaviour
     {
         string nickname = "";
 
-        nickname += prefixNames[Random.Range(0, prefixNames.Length - 1)];
+        nickname += prefixNames[Random.Range(0, prefixNames.Length)];
         nickname += " ";
-        nickname += nicknames[Random.Range(0, nicknames.Length - 1)];
+        nickname += nicknames[Random.Range(0, nicknames.Length)];
 
         return nickname;
     }
