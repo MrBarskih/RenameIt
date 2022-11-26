@@ -8,12 +8,10 @@ public class CharacterCreator : MonoBehaviour
     private string[] nicknames;
     private string[] prefixNames;
 
-    [SerializeField]
     private string nicknameFilePath;
-    [SerializeField]
     private string preftixNamesFilePath;
 
-    void Start()
+    void Awake()
     {
         nicknameFilePath = Application.dataPath + "/Scripts/GameplayObjects/CharacterCreator/CharacterNames.txt";
         preftixNamesFilePath = Application.dataPath + "/Scripts/GameplayObjects/CharacterCreator/CharacterNamesPrefixes.txt";
@@ -48,6 +46,10 @@ public class CharacterCreator : MonoBehaviour
 
         char separator = '\n';
         string[] strValues = text.Split(separator);
+        for (int i = 0; i < strValues.Length; i++) 
+        {
+            strValues[i] = strValues[i].Remove(strValues[i].Length-1);
+        }
 
         return strValues;
     }

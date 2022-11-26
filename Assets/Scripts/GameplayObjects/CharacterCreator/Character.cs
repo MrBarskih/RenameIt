@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Character
 {
-    private string nickName;
-    private int hp;
+    public string nickName { get; private set; }
+    public int hp { get; private set; }
     private int minDamage;
     private int maxDamage;
 
