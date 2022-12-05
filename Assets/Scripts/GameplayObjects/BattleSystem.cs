@@ -6,7 +6,7 @@ using UnityEngine;
 public class BattleSystem : MonoBehaviour
 {
     [SerializeField]
-    private bool isBattleActive;
+    private bool isBattleActive = true;
     [SerializeField]
     [Range(0, 5)]
     private int sec_between_turns;
@@ -16,8 +16,6 @@ public class BattleSystem : MonoBehaviour
     public Dictionary<bool, Character> characterThatTurns = new Dictionary<bool, Character>();
     public Dictionary<bool, WrapTags> characterTag = new Dictionary<bool, WrapTags>();
 
-    Character leftCornerCharacter;
-    Character rightCornerCharacter;
     ConsoleTextLogger gameConsole;
     CharacterCreator characterCreator;
 
@@ -25,12 +23,10 @@ public class BattleSystem : MonoBehaviour
     {
         characterCreator = FindObjectOfType<CharacterCreator>();
 
-        leftCornerCharacter = characterCreator.CreateCharacter();
-        characterThatTurns.Add(playerTurn, leftCornerCharacter);
+        characterThatTurns.Add(playerTurn, null);
         characterTag.Add(playerTurn, WrapTags.Left);
 
-        rightCornerCharacter = characterCreator.CreateCharacter();
-        characterThatTurns.Add(!playerTurn, rightCornerCharacter);
+        characterThatTurns.Add(!playerTurn, null);
         characterTag.Add(!playerTurn, WrapTags.Right);
 
         gameConsole = FindObjectOfType<ConsoleTextLogger>();
@@ -45,46 +41,57 @@ public class BattleSystem : MonoBehaviour
             while (isBattleActive)
             {
                 yield return new WaitForSeconds(sec_between_turns);
-                if (leftCornerCharacter == null || rightCornerCharacter == null)
+                if (characterThatTurns[playerTurn] == null || characterThatTurns[!playerTurn] == null)
                 {
-                    if (leftCornerCharacter == null)
-                        gameConsole.AddText("There is no leftCharacter", WrapTags.Neutral); 
-                    if (rightCornerCharacter == null)
-                        gameConsole.AddText("There is no rigthChrarcter", WrapTags.Neutral);
+                    //create characters if atleast one is dead
+                    characterThatTurns[!playerTurn] = characterCreator.CreateCharacter();
+                    characterThatTurns[playerTurn] = characterCreator.CreateCharacter();
                 }
-                else
+
+                gameConsole.AddText("Round " + turnCount.ToString(), WrapTags.Neutral);
+                gameConsole.NextLine();
+
+                int numOfDamage = StageOfAttack();
+
+                StageOfDefense(numOfDamage);
+
+                if (characterThatTurns[!playerTurn].hp <= 0)
                 {
-                    gameConsole.AddText("Round " + turnCount.ToString(), WrapTags.Neutral);
-                    gameConsole.NextLine();
-
-                    int attack = characterThatTurns[playerTurn].MakeAnAttack();
-                    string lineText = characterThatTurns[playerTurn].nickName + " hits on " + attack.ToString() + " damage";
-                    gameConsole.AddText(lineText, characterTag[playerTurn]);
-                    gameConsole.NextLine();
-
-                    characterThatTurns[!playerTurn].GetAHit(attack);
-                    lineText = characterThatTurns[!playerTurn].nickName + " now has " + characterThatTurns[!playerTurn].hp + " hp";
-                    gameConsole.AddText(lineText, characterTag[playerTurn]);
-                    gameConsole.NextLine();
-
-                    if (characterThatTurns[!playerTurn].hp <= 0)
-                    {
-                        lineText = characterThatTurns[!playerTurn].nickName + " is dead now. Removing the corp.";
-                        gameConsole.AddText(lineText, WrapTags.Neutral);
-                        gameConsole.NextLine();
-                        characterThatTurns[!playerTurn] = null;
-
-                        characterThatTurns[!playerTurn] = characterCreator.CreateCharacter();
-                        lineText = "Greatings to our new pretender " + characterThatTurns[!playerTurn].nickName;
-                        gameConsole.AddText(lineText, WrapTags.Neutral);
-                        gameConsole.NextLine();
-                    }
-
-                    playerTurn = !playerTurn;
-                    turnCount++;
+                    StageOfDeath();
                 }
+
+                playerTurn = !playerTurn;
+                turnCount++;
             }
             yield return true;
         }
-    } 
+    }
+
+    int StageOfAttack() 
+    {
+        int numOfDamage = characterThatTurns[playerTurn].MakeAnAttack();
+        string lineText = characterThatTurns[playerTurn].nickName + " hits on " + numOfDamage.ToString() + " damage";
+        gameConsole.AddText(lineText, characterTag[playerTurn]);
+        gameConsole.NextLine();
+
+        return numOfDamage;
+    }
+
+    void StageOfDefense(int numOfDamage)
+    {
+        characterThatTurns[!playerTurn].GetAHit(numOfDamage);
+        string lineText = characterThatTurns[!playerTurn].nickName + " now has " + characterThatTurns[!playerTurn].hp + " hp";
+        gameConsole.AddText(lineText, characterTag[playerTurn]);
+        gameConsole.NextLine();
+    }
+
+    void StageOfDeath() 
+    {
+        string lineText = characterThatTurns[!playerTurn].nickName + " is dead now. Removing the corp.";
+        gameConsole.AddText(lineText, WrapTags.Neutral);
+        gameConsole.NextLine();
+
+        characterThatTurns[!playerTurn] = null;
+        characterThatTurns[playerTurn] = null;
+    }
 }
