@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CharacterCreator : MonoBehaviour
 {
@@ -13,8 +13,8 @@ public class CharacterCreator : MonoBehaviour
 
     void Awake()
     {
-        nicknameFilePath = Application.dataPath + "/Scripts/GameplayObjects/CharacterCreator/CharacterNames.txt";
-        preftixNamesFilePath = Application.dataPath + "/Scripts/GameplayObjects/CharacterCreator/CharacterNamesPrefixes.txt";
+        nicknameFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Renameit/CharacterNames.txt";
+        preftixNamesFilePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "/Renameit/CharacterNamesPrefixes.txt";
 
         nicknames = parseNameFile(nicknameFilePath);
         prefixNames = parseNameFile(preftixNamesFilePath);
